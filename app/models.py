@@ -1,5 +1,6 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from datetime import datetime, timezone
 from . import db
 
 class Usuario(db.Model):
@@ -11,11 +12,9 @@ class Usuario(db.Model):
     correo = db.Column(db.String(120), unique=True, nullable=False)
     celular = db.Column(db.String(13), nullable=False)
     password = db.Column(db.String(13), nullable=False)
-    usuario_verificado = db.Column(db.Boolean(), nullable=False)
-    fecha_creacion = db.Column(db.DateTime(), nullable=False)
-
-    def __repr__(self):
-        return f'<Usuario {self.nombre}>'
+    usuario_verificado = db.Column(db.Boolean(), default=False, nullable=False)
+    fecha_creacion = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    tipo_usuario = db.Column(db.Integer, nullable=False)
     
 class Orden(db.Model):
     __tablename__ = "orden"
@@ -34,13 +33,14 @@ class Departamento(db.Model):
     codigo = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(50), nullable=False)
 
-class Ciudad(db.Model):
-    __tablename__ = "ciudad"
+# class Ciudad(db.Model):
+#     __tablename__ = "ciudad"
 
-    id_ciudad = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    codigo = db.Column(db.Integer, nullable=False)
-    nombre = db.Column(db.String(50), nullable=False)
-    id_departamento = db.Column(UUID(as_uuid=True), db.ForeignKey('departamento.id_departamento'), nullable=False)
+#     id_ciudad = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+#     codigo = db.Column(db.Integer, nullable=False)
+#     nombre = db.Column(db.String(50), nullable=False)
+#     id_departamento = db.Column(UUID(as_uuid=True), db.ForeignKey('departamento.id_departamento'), nullable=False)
+#     ciudad = db.relationship('Ciudad', backref='municipio')
 
 class Municipio(db.Model):
     __tablename__ = "municipio"
@@ -48,7 +48,8 @@ class Municipio(db.Model):
     id_municipio = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     codigo = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(50), nullable=False)
-    id_ciudad = db.Column(UUID(as_uuid=True), db.ForeignKey('ciudad.id_ciudad'), nullable=False)
+    id_departamento = db.Column(UUID(as_uuid=True), db.ForeignKey('departamento.id_departamento'), nullable=False)
+    departamento = db.relationship('Departamento', backref='municipio')
 
 class Restaurantes(db.Model):
     __tablename__ = "restaurantes"
@@ -59,20 +60,24 @@ class Restaurantes(db.Model):
     direccion = db.Column(db.String(200), nullable=False)
     tiempo_estimado = db.Column(db.Integer, nullable=False)
     id_municipio = db.Column(UUID(as_uuid=True), db.ForeignKey('municipio.id_municipio'), nullable=False)
-
-class RestauranteTipoConsumo(db.Model):
-    __tablename__ = "restauranteTipoConsumo"
-
-    id_restaurante = db.Column(UUID(as_uuid=True), db.ForeignKey('restaurantes.id_restaurante'), primary_key=True, nullable=False)
-    consumo_en_sitio = db.Column(db.Boolean(), nullable=False)
-    delivery = db.Column(db.Boolean(), nullable=False)
-
-
+    municipio = db.relationship('Municipio', backref='restaurantes')
+    consumo_en_sitio = db.Column(db.Boolean(), default=False, nullable=False)
+    delivery = db.Column(db.Boolean(), default=False, nullable=False)
+    tipos_comida = db.relationship(
+        "TipoComida",
+        secondary="restauranteTipoComida",
+        backref="restaurantes",
+        lazy="joined"
+    )
+    
 class TipoComida(db.Model):
     __tablename__ = "tipoComida"
 
     id_tipo_comida = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     descripcion = db.Column(db.String(300), nullable=False)
+    
+    def __repr__(self):
+        return self.descripcion
 
 class RestauranteTipoComida(db.Model):
     __tablename__ = "restauranteTipoComida"
@@ -88,6 +93,8 @@ class Productos(db.Model):
     nombre = db.Column(db.String(200), nullable=False)
     precio = db.Column(db.Float(precision=2), nullable=False)
     descripcion = db.Column(db.String(300), nullable=False)
+    imagen = db.Column(db.String(200))
+
 
 class OrdenDetalles(db.Model):
     __tablename__ = "ordenDetalles"
