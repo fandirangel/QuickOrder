@@ -19,14 +19,27 @@
     <div class="text-center">
       <div class="row">
         <div class="col">
-          <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="Logo">
+          <h3 class="mainFontColor">Selecciona tu ubicación</h3>
         </div>
       </div>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <div class="row">
         <div class="col">
-            <a href="{{ url_for('main.sign') }}" class="btn btn-primary">Haz tu pedido!</a>
+          {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+          <form method="GET" action="restaurant">
+            <div class="mb-3">
+               <select name="municipio" class="form-control" required>
+                    <option value="">-- Selecciona un municipio --</option>
+                    {% for m in municipalities %}
+                        <option value="{{ m.id_municipio }}">{{ m.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary">Iniciar</button>
+          </form>
         </div>
       </div>
     </div>

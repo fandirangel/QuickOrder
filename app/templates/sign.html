@@ -19,14 +19,15 @@
     <div class="text-center">
       <div class="row">
         <div class="col">
-          <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="Logo">
+           <h3 class="mainFontColor">Inicia sesión o registrate</h3>
         </div>
       </div>
       <br/>
       <br/>
       <div class="row">
         <div class="col">
-            <a href="{{ url_for('main.sign') }}" class="btn btn-primary">Haz tu pedido!</a>
+            <a href="{{ url_for('main.signup') }}" class="btn btn-primary">Registrarse</a> <br/> <br/>
+            <a href="{{ url_for('main.signin') }}" class="btn btn-primary">Iniciar sesión</a>
         </div>
       </div>
     </div>

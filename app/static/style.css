@@ -1,0 +1,11 @@
+.containerMainPage {
+   display: flex;
+    justify-content: center;  /* horizontal centering */
+    align-items: center;      /* vertical centering */
+    height: 100vh;         
+    background-color: #101a26;
+    font-family: sans-serif;
+}
+.mainFontColor{
+    color:#e2bc67;
+}

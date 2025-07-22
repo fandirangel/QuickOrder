@@ -9,7 +9,7 @@ class Usuario(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre = db.Column(db.String(50), nullable=False)
     apellido = db.Column(db.String(50), nullable=False)
-    correo = db.Column(db.String(120), unique=True, nullable=False)
+    correo = db.Column(db.String(120), unique=True, nullable=True)
     celular = db.Column(db.String(13), nullable=False)
     password = db.Column(db.String(13), nullable=False)
     usuario_verificado = db.Column(db.Boolean(), default=False, nullable=False)
