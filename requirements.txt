@@ -5,3 +5,4 @@ flask_admin
 psycopg2-binary
 flask_migrate
 wtforms-sqlalchemy
+Pillow

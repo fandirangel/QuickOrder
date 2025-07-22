@@ -94,6 +94,8 @@ class Productos(db.Model):
     precio = db.Column(db.Float(precision=2), nullable=False)
     descripcion = db.Column(db.String(300), nullable=False)
     imagen = db.Column(db.String(200))
+    restaurante = db.relationship('Restaurantes', backref='productos')
+
 
 
 class OrdenDetalles(db.Model):

@@ -8,6 +8,7 @@ from flask_admin import AdminIndexView
 from flask_admin.menu import MenuLink
 from flask_admin.contrib.sqla import ModelView
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
+from flask_admin.form import ImageUploadField
 import os
 
 db = SQLAlchemy()
@@ -59,7 +60,12 @@ def create_app():
     class TipoComidaAdmin(ModelView):
         form_columns = ['descripcion']  # Solo el campo que quieres
         form_overrides = {}  # Limpio
-        form_args = {}  
+        form_args = {
+            'municipio': {
+                'query_factory': lambda: Municipio.query.all(),
+                'get_label': 'nombre'
+                }
+        }  
     class UsuarioAdmin(SecureModelView):
         form_choices = {
             'tipo_usuario': [
@@ -67,6 +73,26 @@ def create_app():
                 (2, 'Cliente'),
                 (3, 'Otro')
             ]
+        }
+    
+    class ProductoAdmin(ModelView):
+        form_columns = ['restaurante','nombre', 'precio','descripcion', 'imagen']
+        # Personaliza el campo imagen para que permita subir archivos
+        form_extra_fields = {
+            'imagen': ImageUploadField('Imagen del porducto',
+                base_path=os.path.join(os.getcwd(), 'static', 'uploads'),
+                relative_path='uploads/',
+                url_relative_path='static/uploads/')
+        }
+        form_overrides = {
+            'restaurante': QuerySelectField
+        }
+        # Configuramos el comportamiento del SelectField
+        form_args = {
+            'restaurante': {
+                'query_factory': lambda: Restaurantes.query.all(),
+                'get_label': 'nombre'
+            }
         }
 
     # Flask-Admin
@@ -76,7 +102,8 @@ def create_app():
     admin.add_view(TipoComidaAdmin(TipoComida, db.session))
     admin.add_view(ModelView(Departamento, db.session))
     admin.add_view(MunicipioAdmin(Municipio, db.session))
-    admin.add_view(ModelView(Productos, db.session))
+    #admin.add_view(ModelView(Productos, db.session))
+    admin.add_view(ProductoAdmin(Productos, db.session))
     admin.add_view(ModelView(ProductosSubproductos, db.session))
 
     admin.add_link(MenuLink(name='Cerrar sesion', category='', url='/admin/logout'))
