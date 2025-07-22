@@ -80,9 +80,9 @@ def create_app():
         # Personaliza el campo imagen para que permita subir archivos
         form_extra_fields = {
             'imagen': ImageUploadField('Imagen del porducto',
-                base_path=os.path.join(os.getcwd(), 'static', 'uploads'),
+                base_path=os.path.join(os.getcwd(), 'app', 'static', 'uploads'),
                 relative_path='uploads/',
-                url_relative_path='static/uploads/')
+                url_relative_path='app/static/uploads/')#url_relative_path='static/uploads/')
         }
         form_overrides = {
             'restaurante': QuerySelectField
