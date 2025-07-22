@@ -69,6 +69,7 @@ class Restaurantes(db.Model):
         backref="restaurantes",
         lazy="joined"
     )
+    imagen = db.Column(db.String(200))
     
 class TipoComida(db.Model):
     __tablename__ = "tipoComida"

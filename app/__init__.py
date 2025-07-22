@@ -41,7 +41,7 @@ def create_app():
         
     
     class RestauranteAdmin(ModelView):
-        form_columns = ['nombre', 'rango_precios', 'direccion','tiempo_estimado', 'municipio', 'consumo_en_sitio','delivery','tipos_comida']
+        form_columns = ['nombre', 'rango_precios', 'direccion','tiempo_estimado', 'municipio', 'consumo_en_sitio','delivery','tipos_comida', 'imagen']
 
         form_overrides = {
             'tipos_comida': QuerySelectMultipleField,
@@ -56,6 +56,12 @@ def create_app():
             'query_factory': lambda: Municipio.query.all(),
             'get_label': 'nombre'
             }
+        }
+        form_extra_fields = {
+            'imagen': ImageUploadField('Imagen del Restaurante',
+                base_path=os.path.join(os.getcwd(), 'app', 'static', 'uploads'),
+                relative_path='uploads/',
+                url_relative_path='app/static/uploads/')#url_relative_path='static/uploads/')
         }
     class TipoComidaAdmin(ModelView):
         form_columns = ['descripcion']  # Solo el campo que quieres
