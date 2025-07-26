@@ -1,11 +1,29 @@
-.containerMainPage {
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;   /* Fallback */
+    background-color: #101a26 !important;
+    font-family: sans-serif;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+.mainFontColor{
+    color:#e2bc67;
+}
+.mainSecondColor{
+    color:#101a26;
+}
+.containerSecondPage{
    display: flex;
     justify-content: center;  /* horizontal centering */
     align-items: center;      /* vertical centering */
     height: 100vh;         
-    background-color: #101a26;
+    background-color: #f5f5f5;
     font-family: sans-serif;
 }
-.mainFontColor{
-    color:#e2bc67;
+.btn-main{
+    background-color: #101a26 !important;
+    color: #e2bc67 !important;
+    border-color: #101a26  !important;
 }

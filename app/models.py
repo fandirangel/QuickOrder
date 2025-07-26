@@ -11,6 +11,7 @@ class Usuario(db.Model):
     apellido = db.Column(db.String(50), nullable=False)
     correo = db.Column(db.String(120), unique=True, nullable=True)
     celular = db.Column(db.String(13), nullable=False)
+    direccion = db.Column(db.String(100), nullable=True)    
     password = db.Column(db.String(13), nullable=False)
     usuario_verificado = db.Column(db.Boolean(), default=False, nullable=False)
     fecha_creacion = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
@@ -24,6 +25,13 @@ class Orden(db.Model):
     descripcion = db.Column(db.Text, nullable=False)
     estado = db.Column(db.Integer, nullable=False)
     id_usuario = db.Column(UUID(as_uuid=True), db.ForeignKey('usuarios.id'), nullable=False)
+
+class OrdenDetalles(db.Model):
+    __tablename__ = "ordenDetalles"
+
+    id_orden_detalle = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id_orden = db.Column(UUID(as_uuid=True), db.ForeignKey('orden.id_orden'), nullable=False)
+    id_producto = db.Column(UUID(as_uuid=True), db.ForeignKey('productos.id_producto'), nullable=False)
 
 
 class Departamento(db.Model):
@@ -97,14 +105,6 @@ class Productos(db.Model):
     imagen = db.Column(db.String(200))
     restaurante = db.relationship('Restaurantes', backref='productos')
 
-
-
-class OrdenDetalles(db.Model):
-    __tablename__ = "ordenDetalles"
-
-    id_orden_detalle = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    id_orden = db.Column(UUID(as_uuid=True), db.ForeignKey('orden.id_orden'), nullable=False)
-    id_producto = db.Column(UUID(as_uuid=True), db.ForeignKey('productos.id_producto'), nullable=False)
 
 class Subproductos(db.Model):
     __tablename__ = "subproductos"
